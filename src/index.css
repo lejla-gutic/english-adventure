@@ -1,111 +1,389 @@
+/* Design tokens taken from the mockup (maketa/) */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --navy: #1d2a4f;
+  --text: #46557a;
+  --muted: #6b7895;
+  --bg: #eef6fe;
+  --surface: #ffffff;
+  --border: #dbe6f5;
+  --border-strong: #b9c8e3;
+  --blue: #2f6fde;
+  --blue-dark: #1f52b3;
+  --blue-soft: #e3ecfa;
+  --green: #22874b;
+  --yellow: #ffc93c;
+  --yellow-dark: #d18e00;
+  --yellow-soft: #fff3cc;
+  --radius: 1.5rem;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --page-width: 90rem;
+  --gutter: clamp(1rem, 4vw, 3rem);
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
+  --font-heading: 'Fredoka', 'Nunito', system-ui, sans-serif;
+  --font-body: 'Nunito', system-ui, 'Segoe UI', Roboto, sans-serif;
+
+  color-scheme: light;
+  font-family: var(--font-body);
+  line-height: 1.5;
   color: var(--text);
   background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+/* Everything is sized in rem, so the whole UI grows with the screen:
+   16px on phones/tablets up to 20px on large laptop screens. */
+html {
+  font-size: clamp(16px, 0.55vw + 10.5px, 20px);
 }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
 }
 
 h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+h2,
+h3 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--navy);
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
 p {
   margin: 0;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+/* Layout */
+.page {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 2.5rem var(--gutter) 3.5rem;
+}
+
+.page-title {
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+}
+
+.page-subtitle {
+  margin: 0.5rem 0 1.75rem;
+  font-size: 1.2rem;
+}
+
+/* Header */
+.app-header {
+  background: var(--surface);
+  border-bottom: 2px solid var(--border);
+}
+
+.app-header__inner {
+  max-width: var(--page-width);
+  min-height: 5rem;
+  margin: 0 auto;
+  padding: 0.75rem var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.app-header__left,
+.app-header__right,
+.app-header__nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.app-header__left {
+  gap: 1.75rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 1rem;
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--navy);
+  white-space: nowrap;
+}
+
+.logo:hover {
+  color: var(--blue);
+}
+
+.logo svg {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.header-note {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1.1rem;
+  border-radius: 999px;
+  background: var(--blue-soft);
+  color: var(--navy);
+  font-size: 1rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.pill--stars {
+  background: var(--yellow-soft);
+}
+
+.pill svg {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1.6rem;
+  border: none;
+  border-radius: 999px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-align: center;
+  white-space: nowrap;
+  transition: transform 0.1s, box-shadow 0.1s, background 0.15s, border-color 0.15s;
+}
+
+.btn:active {
+  transform: translateY(2px);
+}
+
+.btn svg {
+  flex-shrink: 0;
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.btn--primary {
+  background: var(--blue);
+  color: #fff;
+  box-shadow: 0 5px 0 var(--blue-dark);
+}
+
+.btn--primary:hover {
+  background: #3d7ce9;
+}
+
+.btn--primary:active {
+  box-shadow: 0 3px 0 var(--blue-dark);
+}
+
+.btn--flat {
+  border-radius: 1rem;
+  box-shadow: none;
+}
+
+.btn--flat:active {
+  box-shadow: none;
+}
+
+.btn--outline {
+  background: var(--surface);
+  color: var(--navy);
+  border: 2px solid var(--border-strong);
+}
+
+.btn--outline:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.btn--big {
+  padding: 1rem 2.25rem;
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.btn--small {
+  padding: 0.6rem 1.3rem;
+  font-size: 1rem;
+}
+
+/* Round icon-only button (close / home in the game header) */
+.round-btn {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 2px solid var(--border-strong);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--navy);
+}
+
+.round-btn:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+.round-btn svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Shared bits */
+.icon-tile {
+  display: grid;
+  place-items: center;
+  width: 4.25rem;
+  height: 4.25rem;
+  border-radius: 1.1rem;
+  color: var(--navy);
+}
+
+.icon-tile svg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.topic-icon {
+  display: grid;
+  place-items: center;
+  width: 4.75rem;
+  height: 4.75rem;
+  border-radius: 50%;
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+.stars {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.stars svg {
+  width: 1.9rem;
+  height: 1.9rem;
+}
+
+.star {
+  fill: #e6ebf4;
+  stroke: #c3cde0;
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+.star--filled {
+  fill: var(--yellow);
+  stroke: var(--yellow-dark);
+}
+
+.progress {
+  height: 0.9rem;
+  border-radius: 999px;
+  background: var(--blue-soft);
+  overflow: hidden;
+}
+
+.progress__fill {
+  height: 100%;
+  border-radius: inherit;
+  transition: width 0.3s;
+}
+
+.progress__fill--blue {
+  background: var(--blue);
+}
+
+.progress__fill--yellow {
+  background: var(--yellow);
+}
+
+/* Tablets: keep header compact */
+@media (max-width: 900px) {
+  .app-header__left {
+    gap: 1rem;
+  }
+
+  .logo {
+    font-size: 1.35rem;
+  }
+
+  .header-note {
+    display: none;
+  }
+}
+
+/* Phones: header buttons become icon-only */
+@media (max-width: 640px) {
+  .app-header__inner {
+    min-height: 4.25rem;
+    padding-block: 0.6rem;
+    gap: 0.5rem;
+  }
+
+  .app-header__left,
+  .app-header__nav,
+  .app-header__right {
+    gap: 0.5rem;
+  }
+
+  .logo span,
+  .app-header__nav .btn span {
+    display: none;
+  }
+
+  .logo svg {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .app-header__nav .btn {
+    padding: 0.55rem 0.7rem;
+  }
+
+  .pill {
+    padding: 0.35rem 0.8rem;
+    font-size: 0.95rem;
+  }
+
+  .round-btn {
+    width: 3rem;
+    height: 3rem;
+  }
 }

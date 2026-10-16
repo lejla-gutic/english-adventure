@@ -1,0 +1,127 @@
+.topic-hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 2.25rem;
+}
+
+.topic-hero__title {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.topic-hero .topic-icon {
+  width: 6.5rem;
+  height: 6.5rem;
+  font-size: 3.25rem;
+}
+
+.topic-hero h1 {
+  font-size: clamp(2.5rem, 4.5vw, 3.5rem);
+}
+
+.topic-hero p {
+  font-size: 1.25rem;
+}
+
+.tip {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 26rem;
+  padding: 1.1rem 1.75rem 1.1rem 1.5rem;
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--navy);
+  font-weight: 800;
+}
+
+.topic-hero .tip {
+  font-size: 1.2rem;
+}
+
+.tip svg {
+  flex-shrink: 0;
+  width: 3.25rem;
+  height: 3.25rem;
+}
+
+/* 5 columns on laptops, 3 on small laptops/tablets, 2 on large phones, 1 on phones */
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.game-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1.6rem 1.5rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: transform 0.15s, border-color 0.15s;
+}
+
+.game-card:hover {
+  border-color: var(--blue);
+  transform: translateY(-3px);
+}
+
+.game-card h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.game-card p {
+  flex-grow: 1;
+  font-size: 1.05rem;
+}
+
+.game-card .btn {
+  width: 100%;
+  margin-top: 0.25rem;
+  padding-block: 0.9rem;
+  font-size: 1.2rem;
+}
+
+@media (max-width: 1100px) {
+  .game-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .game-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .topic-hero__title {
+    gap: 1rem;
+  }
+
+  .topic-hero .topic-icon {
+    width: 4.75rem;
+    height: 4.75rem;
+    font-size: 2.4rem;
+  }
+
+  .tip {
+    max-width: none;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-grid {
+    grid-template-columns: 1fr;
+  }
+}
