@@ -56,12 +56,10 @@
   opacity: 1;
 }
 
-/* Kartice sa slikama i rečima */
 .match-pairs__card {
   position: relative;
 }
 
-/* Prazan kružić */
 .match-pairs__circle {
   position: absolute;
   left: 22px;
@@ -80,7 +78,6 @@
   background: white;
 }
 
-/* Zeleni kružić sa brojem */
 .match-pairs__circle--matched {
   background: #218c55;
   border: 3px solid #218c55;
@@ -89,19 +86,16 @@
   font-weight: bold;
 }
 
-/* Kartica u normalnom stanju - podignuto dugme */
 .match-pairs__card {
   box-shadow: 0 8px 0 #cbdcf5;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* Kartica koja je izabrana ili pravilno povezana */
 .match-pairs__card--pressed {
   transform: translateY(8px);
   box-shadow: none;
 }
 
-/* Prilikom klika kartica se odmah spušta */
 .match-pairs__card:active:not(:disabled) {
   transform: translateY(8px);
   box-shadow: none;
