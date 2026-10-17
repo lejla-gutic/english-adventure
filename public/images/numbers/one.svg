@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<!-- 1 × animals/dog.svg -->
+<g transform="translate(25 25) scale(0.75)">
+<ellipse cx="56" cy="96" rx="22" ry="42" fill="#7a4a24" transform="rotate(15 56 96)"/>
+<ellipse cx="144" cy="96" rx="22" ry="42" fill="#7a4a24" transform="rotate(-15 144 96)"/>
+<circle cx="100" cy="106" r="58" fill="#c4813f"/>
+<ellipse cx="100" cy="134" rx="34" ry="26" fill="#f2d7b0"/>
+<circle cx="80" cy="96" r="8" fill="#1d2a4f"/><circle cx="82.8" cy="93.2" r="2.8" fill="#fff"/><circle cx="120" cy="96" r="8" fill="#1d2a4f"/><circle cx="122.8" cy="93.2" r="2.8" fill="#fff"/>
+<ellipse cx="100" cy="121" rx="12" ry="8" fill="#1d2a4f"/>
+<path d="M100 128v9" fill="none" stroke="#1d2a4f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M95 142q5 13 10 0z" fill="#ef5b6b"/>
+<path d="M85 139q15 10 30 0" fill="none" stroke="#1d2a4f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</svg>

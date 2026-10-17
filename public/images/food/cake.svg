@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<ellipse cx="100" cy="172" rx="82" ry="12" fill="#dbe6f5"/>
+<rect x="40" y="94" width="120" height="74" rx="10" fill="#ff8fc1"/>
+<rect x="40" y="128" width="120" height="10" fill="#fff3cc"/>
+<path d="M36 98C36 86 44 82 56 82H144C156 82 164 86 164 98V104q-8 12-16 0q-8 16-16 0q-8 12-16 0q-8 16-16 0q-8 12-16 0q-8 16-16 0q-8 12-16 0q-8 14-16 0Z" fill="#fff" stroke="#f3d0e0" stroke-width="2"/>
+<path d="M58 150l6-4M86 156l7 2M118 148l5 5M140 156l7-3" fill="none" stroke="#2f6fde" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M70 146l2 6M102 150l6-4M130 150l-2 6" fill="none" stroke="#ffc93c" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="66" y="52" width="10" height="32" rx="3" fill="#8cc4f5"/>
+<rect x="95" y="46" width="10" height="38" rx="3" fill="#ffc93c"/>
+<rect x="124" y="52" width="10" height="32" rx="3" fill="#2bb05a"/>
+<path d="M71 50C64 42 71 32 71 26C78 34 78 44 71 50Z" fill="#ff8c1a"/>
+<path d="M100 44C93 36 100 26 100 20C107 28 107 38 100 44Z" fill="#ff8c1a"/>
+<path d="M129 50C122 42 129 32 129 26C136 34 136 44 129 50Z" fill="#ff8c1a"/>
+</svg>
