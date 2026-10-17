@@ -1,0 +1,230 @@
+/* "What is this?" mini-game – layout follows maketa/4 */
+.wit {
+  --wit-green: #22874b;
+  --wit-green-soft: #e3f6ea;
+  --wit-red: #d63c3c;
+  --wit-red-soft: #fde8e8;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+  text-align: center;
+}
+
+.wit__title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.wit__title h1 {
+  font-size: clamp(2.25rem, 5vw, 3.25rem);
+}
+
+/* Large illustration card */
+.wit__picture {
+  width: min(100%, clamp(15rem, 42vh, 22rem));
+  aspect-ratio: 1;
+  padding: clamp(1rem, 3vw, 2rem);
+  border: 3px solid var(--border);
+  border-radius: 2rem;
+  background: var(--surface);
+}
+
+/* Answers: 4 in a row on large screens, 2 × 2 on tablets and phones */
+.wit__options {
+  width: 100%;
+  max-width: 64rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.1rem;
+}
+
+.wit__option {
+  min-height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 3px solid var(--border-strong);
+  border-radius: 1.4rem;
+  background: var(--surface);
+  box-shadow: 0 6px 0 var(--border-strong);
+  color: var(--navy);
+  font-family: var(--font-heading);
+  font-size: clamp(1.4rem, 2.6vw, 1.85rem);
+  font-weight: 600;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+  transition: transform 0.1s, box-shadow 0.1s, border-color 0.15s, background 0.15s, opacity 0.15s;
+}
+
+.wit__option:not([aria-disabled='true']):hover {
+  border-color: var(--blue);
+  box-shadow: 0 6px 0 var(--blue);
+}
+
+.wit__option:not([aria-disabled='true']):active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 var(--border-strong);
+}
+
+.wit__option[aria-disabled='true'] {
+  cursor: default;
+}
+
+.wit__option svg {
+  flex-shrink: 0;
+  width: 1.6rem;
+  height: 1.6rem;
+}
+
+.wit__option--correct {
+  border-color: var(--wit-green);
+  background: var(--wit-green-soft);
+  box-shadow: 0 6px 0 var(--wit-green);
+  color: var(--wit-green);
+}
+
+.wit__option--wrong {
+  border-color: var(--wit-red);
+  background: var(--wit-red-soft);
+  box-shadow: 0 6px 0 var(--wit-red);
+  color: var(--wit-red);
+}
+
+.wit__option--dimmed {
+  opacity: 0.45;
+}
+
+/* Hint / feedback below the answers – keeps its height so the page does not jump */
+.wit__footer {
+  width: 100%;
+  max-width: 64rem;
+  min-height: 6rem;
+  display: flex;
+  justify-content: center;
+}
+
+.wit__hint {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.wit__feedback {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  padding: 1rem 1.25rem 1rem 1.75rem;
+  border: 3px solid;
+  border-radius: 1.6rem;
+  text-align: left;
+}
+
+.wit__feedback--correct {
+  border-color: var(--wit-green);
+  background: var(--wit-green-soft);
+}
+
+.wit__feedback--wrong {
+  border-color: var(--wit-red);
+  background: var(--wit-red-soft);
+}
+
+.wit__feedback-text {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--navy);
+}
+
+.wit__feedback--correct strong {
+  color: var(--wit-green);
+}
+
+.wit__feedback--wrong strong {
+  color: var(--wit-red);
+}
+
+.wit__feedback-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+.wit__sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* No words for this topic/grade */
+.wit--empty {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 2.75rem 2rem;
+  border: 3px dashed var(--border-strong);
+  border-radius: 2rem;
+  background: var(--surface);
+}
+
+.wit--empty p {
+  font-size: 1.2rem;
+}
+
+@media (max-width: 900px) {
+  .wit__options {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 40rem;
+  }
+
+  .wit__footer {
+    max-width: 40rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .wit {
+    gap: 1.25rem;
+  }
+
+  .wit__picture {
+    width: min(100%, 15rem);
+    border-radius: 1.5rem;
+  }
+
+  .wit__options {
+    gap: 0.8rem;
+  }
+
+  .wit__option {
+    min-height: 4.25rem;
+    padding: 0.6rem 0.5rem;
+  }
+
+  .wit__feedback {
+    justify-content: center;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .wit__feedback-actions {
+    margin: 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wit__option {
+    transition: none;
+  }
+}
