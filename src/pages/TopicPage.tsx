@@ -8,6 +8,7 @@ import { GAMES } from '../data/games'
 import { routeHref } from '../router'
 import type { Grade, Topic } from '../types'
 import './TopicPage.css'
+import { loadStarProgress } from '../utils/starProgress'
 
 interface TopicPageProps {
   topic: Topic
@@ -16,6 +17,8 @@ interface TopicPageProps {
 }
 
 export default function TopicPage({ topic, grade, stars }: TopicPageProps) {
+  const progress = loadStarProgress(grade)
+
   return (
     <>
       <AppHeader
@@ -52,7 +55,7 @@ export default function TopicPage({ topic, grade, stars }: TopicPageProps) {
               </span>
               <h2>{game.name}</h2>
               <p>{game.description}</p>
-              <Stars count={0} />
+              <Stars count={progress[`${topic.id}:${game.id}`] ?? 0} />
               <a className="btn btn--primary btn--flat" href={routeHref({ page: 'game', topic, game })}>
                 Igraj
               </a>

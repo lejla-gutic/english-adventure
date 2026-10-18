@@ -5,6 +5,7 @@ import { GAME_COMPONENTS } from '../games'
 import type { GameProgress, GameResult } from '../games/types'
 import type { Game, Grade, Topic } from '../types'
 import './GamePage.css'
+import { saveGameStars } from '../utils/starProgress' 
 
 interface GamePageProps {
   topic: Topic
@@ -18,6 +19,17 @@ export default function GamePage({ topic, game, grade }: GamePageProps) {
   const [result, setResult] = useState<GameResult | null>(null)
 
   const GameComponent = GAME_COMPONENTS[game.id]
+  function handleFinish(gameResult: GameResult) {
+  saveGameStars(
+    grade,
+    topic.id,
+    game.id,
+    gameResult.correct,
+    gameResult.total
+  )
+
+  setResult(gameResult)
+}
 
   function restart() {
     setResult(null)
@@ -43,7 +55,7 @@ export default function GamePage({ topic, game, grade }: GamePageProps) {
           game={game}
           grade={grade}
           onProgress={setProgress}
-          onFinish={setResult}
+          onFinish={handleFinish}
         />
       </main>
     </>

@@ -5,14 +5,20 @@ import TopicPage from './pages/TopicPage'
 import TopicsPage from './pages/TopicsPage'
 import { routeHref, useRoute } from './router'
 import type { Grade } from './types'
+import { loadStarProgress, getTotalStars } from './utils/starProgress'
 
 function App() {
   const [grade, setGrade] = useState<Grade>(2)
   const route = useRoute()
   const href = routeHref(route)
 
-  // TODO: replace with the real star count once progress tracking exists.
-  const stars = 0
+  const [progress, setProgress] = useState(() => loadStarProgress(grade))
+
+useEffect(() => {
+  setProgress(loadStarProgress(grade))
+}, [grade, href])
+
+const stars = getTotalStars(progress)
 
   useEffect(() => {
     window.scrollTo(0, 0)

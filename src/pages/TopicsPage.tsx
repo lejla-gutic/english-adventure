@@ -8,6 +8,7 @@ import { TOPICS } from '../data/topics'
 import { routeHref } from '../router'
 import type { Grade } from '../types'
 import './TopicsPage.css'
+import { getTopicStars, loadStarProgress } from '../utils/starProgress'
 
 const MAX_TOPIC_STARS = GAMES.length * MAX_STARS_PER_GAME
 const MAX_TOTAL_STARS = TOPICS.length * MAX_TOPIC_STARS
@@ -44,7 +45,7 @@ export default function TopicsPage({ grade, stars }: TopicsPageProps) {
                 </span>
                 <h2>{topic.name}</h2>
                 <span className="topic-card__stars">
-                  <StarIcon /> 0 / {MAX_TOPIC_STARS} zvezdic
+                  <StarIcon /> {getTopicStars(loadStarProgress(grade), topic.id)} / {MAX_TOPIC_STARS} zvezdic
                 </span>
               </a>
             ))}
