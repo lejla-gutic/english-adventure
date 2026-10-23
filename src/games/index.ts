@@ -5,6 +5,7 @@ import type { GameProps } from './types'
 import MatchThePairs from './MatchThePairs/MatchThePairs'
 import ListenAndChoose from './ListenAndChoose/ListenAndChoose'
 import WhatIsThis from './WhatIsThis/WhatIsThis'
+import BuildASentence from './BuildASentence/BuildASentence'
 
 // Replace a placeholder with the real game component once it is ready, e.g.
 //   import WhatIsThis from './WhatIsThis/WhatIsThis'
@@ -13,6 +14,6 @@ export const GAME_COMPONENTS: Record<GameId, ComponentType<GameProps>> = {
   'what-is-this': WhatIsThis,
   'listen-and-choose': ListenAndChoose,
   'match-the-pairs': MatchThePairs,
-  'build-a-sentence': GamePlaceholder,
+  'build-a-sentence': BuildASentence,
   'say-it': GamePlaceholder,
 }
