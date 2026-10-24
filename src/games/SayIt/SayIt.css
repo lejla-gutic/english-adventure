@@ -1,0 +1,224 @@
+/* "Say it" mini-game – same layout idea as "What is this?" */
+.say {
+  --say-orange: #f2762e;
+  --say-orange-dark: #c95514;
+  --say-orange-soft: #fde6da;
+  --say-green: #22874b;
+  --say-green-soft: #e3f6ea;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.say__title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.say__title h1 {
+  font-size: clamp(2.25rem, 5vw, 3.25rem);
+}
+
+/* Picture + the word to say */
+.say__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: clamp(1rem, 3vw, 1.75rem) clamp(1.5rem, 4vw, 3rem);
+  border: 3px solid var(--border);
+  border-radius: 2rem;
+  background: var(--surface);
+}
+
+.say__picture {
+  width: clamp(9rem, 26vh, 14rem);
+  aspect-ratio: 1;
+}
+
+.say__word {
+  color: var(--navy);
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 7vw, 4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+/* Big round microphone button */
+.say__mic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.say__mic-btn {
+  width: 6.5rem;
+  height: 6.5rem;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: var(--say-orange);
+  box-shadow: 0 6px 0 var(--say-orange-dark);
+  color: #fff;
+  transition: transform 0.1s, box-shadow 0.1s, background 0.15s;
+}
+
+.say__mic-btn svg {
+  width: 3rem;
+  height: 3rem;
+}
+
+.say__mic-btn:not(:disabled):not([aria-disabled='true']):hover {
+  background: var(--say-orange-dark);
+}
+
+.say__mic-btn:not(:disabled):not([aria-disabled='true']):active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 var(--say-orange-dark);
+}
+
+.say__mic-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.say__mic-btn--listening {
+  background: var(--say-green);
+  box-shadow: 0 6px 0 #17663a;
+  cursor: default;
+  animation: say-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes say-pulse {
+  0%,
+  100% {
+    outline: 0 solid rgb(34 135 75 / 0.35);
+  }
+  50% {
+    outline: 0.9rem solid rgb(34 135 75 / 0.2);
+  }
+}
+
+.say__mic-label {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--navy);
+}
+
+/* Hint / feedback – keeps its height so the page does not jump */
+.say__footer {
+  width: 100%;
+  max-width: 48rem;
+  min-height: 6rem;
+  display: flex;
+  justify-content: center;
+}
+
+.say__hint {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.say__feedback {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  padding: 1rem 1.25rem 1rem 1.75rem;
+  border: 3px solid;
+  border-radius: 1.6rem;
+  text-align: left;
+}
+
+.say__feedback--correct {
+  border-color: var(--say-green);
+  background: var(--say-green-soft);
+}
+
+/* A wrong try is not "red" – the child simply tries again */
+.say__feedback--retry {
+  border-color: var(--say-orange);
+  background: var(--say-orange-soft);
+}
+
+.say__feedback-text {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--navy);
+}
+
+.say__feedback--correct strong {
+  color: var(--say-green);
+}
+
+.say__feedback--retry strong {
+  color: var(--say-orange-dark);
+}
+
+.say__feedback-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+/* No words for this topic/grade, or no speech recognition in the browser */
+.say--empty {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 2.75rem 2rem;
+  border: 3px dashed var(--border-strong);
+  border-radius: 2rem;
+  background: var(--surface);
+}
+
+.say--empty p {
+  font-size: 1.2rem;
+}
+
+@media (max-width: 640px) {
+  .say {
+    gap: 1.1rem;
+  }
+
+  .say__picture {
+    width: 8rem;
+  }
+
+  .say__mic-btn {
+    width: 5.5rem;
+    height: 5.5rem;
+  }
+
+  .say__feedback {
+    justify-content: center;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .say__feedback-actions {
+    margin: 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .say__mic-btn {
+    transition: none;
+  }
+
+  .say__mic-btn--listening {
+    animation: none;
+    outline: 0.5rem solid rgb(34 135 75 / 0.25);
+  }
+}
