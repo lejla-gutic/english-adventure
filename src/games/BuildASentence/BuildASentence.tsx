@@ -50,6 +50,8 @@ export default function BuildASentence({
   const [finished, setFinished] = useState(false)
 
   const retryTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // Prepreči, da bi hiter dvojni klik na "Preveri" poved preveril (in štel) dvakrat
+  const checking = useRef(false)
 
   const sentence = sentences[currentIndex]
   const total = sentences.length
@@ -66,6 +68,7 @@ export default function BuildASentence({
     setSelectedWords([])
     setFeedback(null)
     setHadMistake(false)
+    checking.current = false
 
     return () => {
       if (retryTimer.current !== null) {
@@ -112,12 +115,14 @@ export default function BuildASentence({
   function checkAnswer() {
     if (
       !sentence ||
+      checking.current ||
       feedback !== null ||
       finished ||
       selectedWords.length !== getWords(sentence.text).length
     ) {
       return
     }
+    checking.current = true
 
     const answer = selectedWords.map((word) => word.text).join(' ')
     const expected = getWords(sentence.text).join(' ')
@@ -140,6 +145,7 @@ export default function BuildASentence({
         setSelectedWords([])
         setFeedback(null)
         retryTimer.current = null
+        checking.current = false
       }, 1500)
     }
   }
@@ -157,7 +163,8 @@ export default function BuildASentence({
         total,
       })
     } else {
-      setCurrentIndex((prev) => prev + 1)
+      // Ne (prev) => prev + 1: dvojni klik na "Naprej" bi sicer preskočil poved
+      setCurrentIndex(currentIndex + 1)
     }
   }
 

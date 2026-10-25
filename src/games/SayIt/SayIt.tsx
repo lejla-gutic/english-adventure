@@ -85,7 +85,9 @@ export default function SayIt({ topic, grade, onProgress, onFinish }: GameProps)
   }
 
   function handleListen() {
-    if (status === 'listening') return
+    // The ref is set immediately, so a fast double click cannot start two listeners
+    // (which could both count the same word as correct).
+    if (status === 'listening' || cancelListening.current) return
     stopSpeaking() // the microphone should not hear our own voice
     setStatus('listening')
     setHeard('')

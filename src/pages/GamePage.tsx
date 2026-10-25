@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import GameHeader from '../components/GameHeader'
 import ResultScreen from '../components/ResultScreen'
 import { GAME_COMPONENTS } from '../games'
@@ -18,8 +18,14 @@ export default function GamePage({ topic, game, grade }: GamePageProps) {
   const [progress, setProgress] = useState<GameProgress | null>(null)
   const [result, setResult] = useState<GameResult | null>(null)
 
+  // Set on the first onFinish, so a double click on the last "Naprej" saves only once.
+  const finished = useRef(false)
+
   const GameComponent = GAME_COMPONENTS[game.id]
   function handleFinish(gameResult: GameResult) {
+  if (finished.current) return
+  finished.current = true
+
   saveGameStars(
     grade,
     topic.id,
@@ -32,6 +38,7 @@ export default function GamePage({ topic, game, grade }: GamePageProps) {
 }
 
   function restart() {
+    finished.current = false
     setResult(null)
     setProgress(null)
     setAttempt((value) => value + 1) // new key -> the game starts fresh
