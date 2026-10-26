@@ -6,18 +6,49 @@ import { StarIcon } from '../components/Stars'
 import { GAMES, MAX_STARS_PER_GAME } from '../data/games'
 import { TOPICS } from '../data/topics'
 import { routeHref } from '../router'
-import type { Grade } from '../types'
+import type { Grade, TopicId } from '../types'
 import './TopicsPage.css'
 import { getTopicStars, isTopicCompleted, isTopicUnlocked, loadStarProgress } from '../utils/starProgress'
 
 const MAX_TOPIC_STARS = GAMES.length * MAX_STARS_PER_GAME
 const MAX_TOTAL_STARS = TOPICS.length * MAX_TOPIC_STARS
-
-// Badges are only shown for now; unlocking comes with progress tracking.
 const BADGES = [
-  { emoji: '🐾', name: 'Prijatelj živali', description: 'Vse igre pri Animals' },
-  { emoji: '🎨', name: 'Mojster barv', description: 'Vse igre pri Colours' },
-  { emoji: '🎤', name: 'Glasni govorec', description: '10 pravilno izgovorjenih besed' },
+  {
+    topicId: 'animals',
+    emoji: '🐾',
+    name: 'Prijatelj živali',
+    description: 'Zaključi vse igre pri Animals',
+  },
+  {
+    topicId: 'colours',
+    emoji: '🎨',
+    name: 'Mojster barv',
+    description: 'Zaključi vse igre pri Colours',
+  },
+  {
+    topicId: 'food',
+    emoji: '🍎',
+    name: 'Mojster hrane',
+    description: 'Zaključi vse igre pri Food',
+  },
+  {
+    topicId: 'family',
+    emoji: '👨‍👩‍👧',
+    name: 'Družinski prijatelj',
+    description: 'Zaključi vse igre pri Family',
+  },
+  {
+    topicId: 'school',
+    emoji: '🎒',
+    name: 'Šolski junak',
+    description: 'Zaključi vse igre pri School',
+  },
+  {
+    topicId: 'numbers',
+    emoji: '🔢',
+    name: 'Mojster števil',
+    description: 'Zaključi vse igre pri Numbers',
+  },
 ]
 
 interface TopicsPageProps {
@@ -97,17 +128,28 @@ export default function TopicsPage({ grade, stars }: TopicsPageProps) {
           <section className="side-card">
             <h2>Moje značke</h2>
             <ul className="badge-list">
-              {BADGES.map((badge) => (
-                <li key={badge.name} className="badge">
-                  <span className="badge__icon" aria-hidden="true">
-                    {badge.emoji}
-                  </span>
-                  <span>
-                    <strong>{badge.name}</strong>
-                    <small>{badge.description}</small>
-                  </span>
-                </li>
-              ))}
+              {BADGES.map((badge) => {
+  const unlocked = isTopicCompleted(progress, badge.topicId as TopicId)
+
+  return (
+    <li
+      key={badge.name}
+      className="badge"
+      style={{ opacity: unlocked ? 1 : 0.4 }}
+    >
+      <span className="badge__icon" aria-hidden="true">
+        {unlocked ? badge.emoji : '🔒'}
+      </span>
+
+      <span>
+        <strong>{badge.name}</strong>
+        <small>
+          {unlocked ? '🏆 Osvojena značka!' : badge.description}
+        </small>
+      </span>
+    </li>
+  )
+})}
             </ul>
           </section>
         </aside>

@@ -8,7 +8,14 @@ import type { Grade } from './types'
 import { loadStarProgress, getTotalStars, isTopicUnlocked } from './utils/starProgress'
 
 function App() {
-  const [grade, setGrade] = useState<Grade>(2)
+  const [grade, setGrade] = useState<Grade>(() => {
+  const savedGrade = localStorage.getItem('english-adventure-grade')
+  return savedGrade === '3' ? 3 : 2
+})
+
+  useEffect(() => {
+  localStorage.setItem('english-adventure-grade', String(grade))
+}, [grade])
   const route = useRoute()
   const href = routeHref(route)
 
