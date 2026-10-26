@@ -5,7 +5,7 @@ import TopicPage from './pages/TopicPage'
 import TopicsPage from './pages/TopicsPage'
 import { routeHref, useRoute } from './router'
 import type { Grade } from './types'
-import { loadStarProgress, getTotalStars } from './utils/starProgress'
+import { loadStarProgress, getTotalStars, isTopicUnlocked } from './utils/starProgress'
 
 function App() {
   const [grade, setGrade] = useState<Grade>(2)
@@ -23,6 +23,12 @@ const stars = getTotalStars(progress)
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [href])
+
+  // A locked topic (or one of its games) opened by typing the URL shows the map instead.
+  if ((route.page === 'topic' || route.page === 'game') &&
+      !isTopicUnlocked(loadStarProgress(grade), route.topic.id)) {
+    return <TopicsPage grade={grade} stars={stars} />
+  }
 
   switch (route.page) {
     case 'home':

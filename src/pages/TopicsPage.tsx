@@ -8,7 +8,7 @@ import { TOPICS } from '../data/topics'
 import { routeHref } from '../router'
 import type { Grade } from '../types'
 import './TopicsPage.css'
-import { getTopicStars, loadStarProgress } from '../utils/starProgress'
+import { getTopicStars, isTopicCompleted, isTopicUnlocked, loadStarProgress } from '../utils/starProgress'
 
 const MAX_TOPIC_STARS = GAMES.length * MAX_STARS_PER_GAME
 const MAX_TOTAL_STARS = TOPICS.length * MAX_TOPIC_STARS
@@ -26,6 +26,8 @@ interface TopicsPageProps {
 }
 
 export default function TopicsPage({ grade, stars }: TopicsPageProps) {
+  const progress = loadStarProgress(grade)
+
   return (
     <>
       <AppHeader nav={<HomeButton />} right={<PlayerInfo grade={grade} stars={stars} />} />
@@ -35,20 +37,51 @@ export default function TopicsPage({ grade, stars }: TopicsPageProps) {
           <p className="page-subtitle">Izberi temo, igraj igre in zbiraj zvezdice.</p>
 
           <div className="topic-grid">
-            {TOPICS.map((topic, index) => (
-              <a key={topic.id} className="topic-card" href={routeHref({ page: 'topic', topic })}>
+            {TOPICS.map((topic, index) => {
+              const label = (
                 <span className="topic-card__label">
                   {index + 1} · {topic.nameSl}
                 </span>
+              )
+              const icon = (
                 <span className="topic-icon" style={{ background: topic.color }} aria-hidden="true">
                   {topic.emoji}
                 </span>
-                <h2>{topic.name}</h2>
-                <span className="topic-card__stars">
-                  <StarIcon /> {getTopicStars(loadStarProgress(grade), topic.id)} / {MAX_TOPIC_STARS} zvezdic
-                </span>
-              </a>
-            ))}
+              )
+
+              // Locked topic: not a link, so it cannot be opened.
+              if (!isTopicUnlocked(progress, topic.id)) {
+                return (
+                  <div key={topic.id} className="topic-card topic-card--locked" aria-disabled="true">
+                    {label}
+                    {icon}
+                    <h2>
+                      <span aria-hidden="true">🔒</span> {topic.name}
+                    </h2>
+                    <span className="topic-card__lock-text">
+                      Najprej dokončaj temo {TOPICS[index - 1].nameSl}.
+                    </span>
+                  </div>
+                )
+              }
+
+              const completed = isTopicCompleted(progress, topic.id)
+              return (
+                <a
+                  key={topic.id}
+                  className={`topic-card${completed ? ' topic-card--completed' : ''}`}
+                  href={routeHref({ page: 'topic', topic })}
+                >
+                  {label}
+                  {icon}
+                  <h2>{topic.name}</h2>
+                  <span className="topic-card__stars">
+                    <StarIcon /> {getTopicStars(progress, topic.id)} / {MAX_TOPIC_STARS} zvezdic
+                  </span>
+                  {completed && <span className="topic-card__done">✓ Dokončano</span>}
+                </a>
+              )
+            })}
           </div>
         </section>
 

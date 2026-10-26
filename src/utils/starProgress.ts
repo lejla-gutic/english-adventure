@@ -1,8 +1,8 @@
+import type { GameId, Grade, TopicId } from '../types'
+import { GAMES, starsForResult } from '../data/games'
+import { TOPICS } from '../data/topics'
 
-import type { GameId, Grade } from '../types'
-import { starsForResult } from '../data/games'
-
-type StarProgress = Record<string, number>
+export type StarProgress = Record<string, number>
 
 const STORAGE_KEY = 'english-adventure-stars'
 
@@ -65,4 +65,25 @@ export function getTopicStars(
   return Object.entries(progress)
     .filter(([key]) => key.startsWith(`${topicId}:`))
     .reduce((sum, [, stars]) => sum + stars, 0)
+}
+
+// A topic is completed when every game in it was finished with at least
+// 1 star (the result screen shows "Bravo!" for 1 or more stars).
+export function isTopicCompleted(
+  progress: StarProgress,
+  topicId: TopicId
+): boolean {
+  return GAMES.every((game) => (progress[`${topicId}:${game.id}`] ?? 0) > 0)
+}
+
+// Topics unlock in map order: the first one is always open, every other one
+// opens once the previous topic is completed. Unlocking is worked out from the
+// saved stars, which never go down, so an unlocked topic stays unlocked.
+export function isTopicUnlocked(
+  progress: StarProgress,
+  topicId: TopicId
+): boolean {
+  const index = TOPICS.findIndex((topic) => topic.id === topicId)
+  if (index <= 0) return true
+  return isTopicCompleted(progress, TOPICS[index - 1].id)
 }

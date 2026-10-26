@@ -30,6 +30,36 @@
   transform: translateY(-3px);
 }
 
+/* Completed topic: green border and a "Dokončano" label */
+.topic-card--completed {
+  border-color: var(--green);
+}
+
+.topic-card__done {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--green);
+}
+
+/* Locked topic: faded, grey and not clickable */
+.topic-card--locked {
+  opacity: 0.55;
+  filter: grayscale(1);
+  cursor: not-allowed;
+}
+
+.topic-card--locked:hover {
+  border-color: var(--border);
+  box-shadow: 0 6px 0 var(--border);
+  transform: none;
+}
+
+.topic-card__lock-text {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
 .topic-card__label {
   font-size: 1rem;
   font-weight: 800;
