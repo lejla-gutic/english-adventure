@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { GameProps } from '../types'
 import { getWordsWithImages } from '../../data/vocabulary'
+import OllieMessage from '../../components/OllieMessage'
 import SpeakerButton from '../../components/SpeakerButton'
 import { stopSpeaking } from '../../utils/speech'
 import './ListenAndChoose.css'
@@ -165,14 +166,11 @@ export default function ListenAndChoose({
 
       <div className="listen-choose__feedback-area" aria-live="polite">
         {selectedAnswer !== null ? (
-          <p className="listen-choose__feedback listen-choose__feedback--correct">
-            Bravo! Pravilen odgovor!
-          </p>
+          <OllieMessage mood="correct" />
         ) : (
+          // A new key after each wrong try, so Ollie picks a new message
           wrongAnswers.length > 0 && (
-            <p className="listen-choose__feedback listen-choose__feedback--wrong">
-              Poskusi znova!
-            </p>
+            <OllieMessage key={wrongAnswers.length} mood="wrong" />
           )
         )}
       </div>

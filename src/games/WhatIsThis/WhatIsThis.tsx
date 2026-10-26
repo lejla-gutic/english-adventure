@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import OllieMessage from '../../components/OllieMessage'
 import SpeakerButton from '../../components/SpeakerButton'
 import WordImage from '../../components/WordImage'
 import { getWords, getWordsWithImages } from '../../data/vocabulary'
@@ -146,17 +147,17 @@ export default function WhatIsThis({ topic, grade, onProgress, onFinish }: GameP
       <div className="wit__footer" aria-live="polite">
         {answered ? (
           <div className={`wit__feedback wit__feedback--${isCorrect ? 'correct' : 'wrong'}`}>
-            <p className="wit__feedback-text">
+            <OllieMessage mood={isCorrect ? 'correct' : 'wrong'}>
               {isCorrect ? (
                 <>
-                  Bravo! <strong lang="en">{question.word.english}</strong> je pravilno.
+                  <strong lang="en">{question.word.english}</strong> je pravilno.
                 </>
               ) : (
                 <>
-                  Ne čisto. Pravilni odgovor je <strong lang="en">{question.word.english}</strong>.
+                  Pravilni odgovor je <strong lang="en">{question.word.english}</strong>.
                 </>
               )}
-            </p>
+            </OllieMessage>
             <div className="wit__feedback-actions">
               <SpeakerButton word={question.word.english} />
               <button ref={nextButton} type="button" className="btn btn--primary btn--big" onClick={handleNext}>

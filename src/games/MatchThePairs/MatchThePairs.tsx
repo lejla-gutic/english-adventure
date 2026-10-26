@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import type { GameProps } from '../types'
 import { getWordsWithImages } from '../../data/vocabulary'
+import type { OllieMood } from '../../data/mascot'
+import OllieMessage from '../../components/OllieMessage'
 import './MatchThePairs.css'
 
 function shuffleWords<T>(words: T[]): T[] {
@@ -41,6 +43,9 @@ export default function MatchThePairs({
   const [matchedPairs, setMatchedPairs] = useState<string[]>([])
   const [wrongWord, setWrongWord] = useState<string | null>(null)
   const [wrongPairs, setWrongPairs] = useState<string[]>([])
+  // Ollie's reaction to the last attempt; `attempt` gives each reaction a new message.
+  const [feedback, setFeedback] = useState<OllieMood | null>(null)
+  const [attempt, setAttempt] = useState(0)
 
   useEffect(() => {
     onProgress({
@@ -83,13 +88,17 @@ export default function MatchThePairs({
     if (matchedPairs.includes(id)) return
     if (wrongWord !== null) return
 
+    setAttempt(attempt + 1)
+
     if (selectedImage === id) {
       playSound('correct')
+      setFeedback('correct')
 
       setMatchedPairs([...matchedPairs, id])
       setSelectedImage(null)
     } else {
       playSound('wrong')
+      setFeedback('wrong')
       setWrongWord(id)
 
       if (!wrongPairs.includes(selectedImage)) {
@@ -188,6 +197,10 @@ export default function MatchThePairs({
           ))}
         </div>
 
+      </div>
+
+      <div className="match-pairs__feedback-area" aria-live="polite">
+        {feedback !== null && <OllieMessage key={attempt} mood={feedback} />}
       </div>
     </section>
   )

@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { GameProps } from '../types'
 import { getSentences } from '../../data/sentences'
+import OllieMessage from '../../components/OllieMessage'
 import './BuildASentence.css'
 
 type WordTile = {
@@ -214,17 +215,7 @@ export default function BuildASentence({
         className="build-sentence-feedback-area"
         aria-live="polite"
       >
-        {feedback === 'wrong' && (
-          <p className="build-sentence-feedback wrong">
-            Poskusi znova!
-          </p>
-        )}
-
-        {feedback === 'correct' && (
-          <p className="build-sentence-feedback correct">
-            Odlično! Pravilno si sestavil poved!
-          </p>
-        )}
+        {feedback !== null && <OllieMessage key={feedback} mood={feedback} />}
       </div>
 
       {/* Besede, ki jih učenec še ni izbral */}

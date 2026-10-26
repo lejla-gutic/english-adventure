@@ -430,6 +430,82 @@ button {
   border-radius: 50%;
 }
 
+/* Ollie with an encouraging message (OllieMessage) – used by the mini-games */
+.ollie-message {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  text-align: left;
+}
+
+.ollie-message__owl {
+  flex-shrink: 0;
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.ollie-message__bubble {
+  position: relative;
+  margin: 0;
+  padding: 0.5rem 1.1rem;
+  border: 3px solid var(--green);
+  border-radius: 1.1rem;
+  background: var(--surface);
+  color: var(--navy);
+  font-weight: 800;
+}
+
+.ollie-message--wrong .ollie-message__bubble {
+  border-color: var(--yellow-dark);
+}
+
+/* Small tail pointing at Ollie */
+.ollie-message__bubble::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -9px;
+  width: 14px;
+  height: 14px;
+  border-left: 3px solid;
+  border-bottom: 3px solid;
+  border-color: inherit;
+  background: var(--surface);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.ollie-message__text {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.ollie-message__detail {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 1.05rem;
+}
+
+@media (max-width: 640px) {
+  .ollie-message {
+    gap: 0.7rem;
+  }
+
+  .ollie-message__owl {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .ollie-message__text {
+    font-size: 1.1rem;
+  }
+
+  .ollie-message__detail {
+    font-size: 0.95rem;
+  }
+}
+
 /* Tablets: keep header compact */
 @media (max-width: 900px) {
   .app-header__left {

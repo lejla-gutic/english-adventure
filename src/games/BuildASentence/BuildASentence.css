@@ -112,20 +112,6 @@
   font-weight: 800;
 }
 
-.build-sentence-feedback {
-  font-size: 19px;
-  font-weight: 750;
-  margin: 12px 0 18px;
-}
-
-.build-sentence-feedback.correct {
-  color: #279653;
-}
-
-.build-sentence-feedback.wrong {
-  color: #d34a4a;
-}
-
 .build-sentence-actions {
   display: flex;
   justify-content: center;
@@ -180,12 +166,8 @@
 }
 
 .build-sentence-feedback-area {
-  height: 55px;
+  min-height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.build-sentence-feedback {
-  margin: 0;
 }

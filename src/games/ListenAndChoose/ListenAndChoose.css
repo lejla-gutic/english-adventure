@@ -74,22 +74,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 70px;
+  min-height: 80px;
   margin-top: 16px;
-}
-
-.listen-choose__feedback {
-  margin: 0;
-  font-size: 24px;
-  font-weight: 800;
-}
-
-.listen-choose__feedback--correct {
-  color: #218c55;
-}
-
-.listen-choose__feedback--wrong {
-  color: #e63946;
 }
 
 @media (max-width: 700px) {

@@ -100,3 +100,12 @@
   transform: translateY(8px);
   box-shadow: none;
 }
+
+/* Fixed space for Ollie's message, so the page does not jump when it appears */
+.match-pairs__feedback-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80px;
+  margin-top: 24px;
+}

@@ -138,12 +138,6 @@
   background: var(--wit-red-soft);
 }
 
-.wit__feedback-text {
-  font-size: 1.35rem;
-  font-weight: 800;
-  color: var(--navy);
-}
-
 .wit__feedback--correct strong {
   color: var(--wit-green);
 }

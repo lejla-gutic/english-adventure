@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Icon from '../../components/Icon'
+import OllieMessage from '../../components/OllieMessage'
 import SpeakerButton from '../../components/SpeakerButton'
 import WordImage from '../../components/WordImage'
 import { getWords } from '../../data/vocabulary'
@@ -165,9 +166,9 @@ export default function SayIt({ topic, grade, onProgress, onFinish }: GameProps)
       <div className="say__footer" aria-live="polite">
         {status === 'correct' && (
           <div className="say__feedback say__feedback--correct">
-            <p className="say__feedback-text">
-              Bravo! <strong lang="en">{word.english}</strong> je pravilno.
-            </p>
+            <OllieMessage mood="correct">
+              <strong lang="en">{word.english}</strong> je pravilno.
+            </OllieMessage>
             <div className="say__feedback-actions">
               <button ref={nextButton} type="button" className="btn btn--primary btn--big" onClick={handleNext}>
                 Naprej
@@ -178,15 +179,13 @@ export default function SayIt({ topic, grade, onProgress, onFinish }: GameProps)
 
         {(status === 'wrong' || status === 'error') && (
           <div className="say__feedback say__feedback--retry">
-            <p className="say__feedback-text">
-              {status === 'wrong' ? (
-                <>
-                  Skoraj! Slišano: <strong lang="en">»{heard}«</strong>. Poslušaj besedo in poskusi znova.
-                </>
-              ) : (
-                error && ERROR_MESSAGES[error]
-              )}
-            </p>
+            {status === 'wrong' ? (
+              <OllieMessage mood="wrong">
+                Slišano: <strong lang="en">»{heard}«</strong>. Poslušaj besedo in poskusi znova.
+              </OllieMessage>
+            ) : (
+              <p className="say__feedback-text">{error && ERROR_MESSAGES[error]}</p>
+            )}
             <div className="say__feedback-actions">
               <button type="button" className="btn btn--flat" onClick={handleNext}>
                 Preskoči
