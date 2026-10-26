@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from 'react'
 import type { GameProps } from '../types'
 import { getWordsWithImages } from '../../data/vocabulary'
@@ -46,10 +45,15 @@ export default function ListenAndChoose({
   })
 
   const [currentQuestion, setCurrentQuestion] = useState(0)
+  // Set only when the correct picture is chosen – then the game moves on.
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
+  // Wrong pictures already tried for the current question.
+  const [wrongAnswers, setWrongAnswers] = useState<string[]>([])
   const [correctAnswers, setCorrectAnswers] = useState(0)
   const [finished, setFinished] = useState(false)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // Set immediately on the correct answer, so a fast double click counts only once.
+  const answeredRef = useRef(false)
 
   const question = questions[currentQuestion]
 
@@ -69,20 +73,33 @@ export default function ListenAndChoose({
   }, [])
 
   function handleAnswer(id: string) {
-    if (!question || selectedAnswer !== null || finished) return
+    if (
+      !question ||
+      answeredRef.current ||
+      selectedAnswer !== null ||
+      wrongAnswers.includes(id) ||
+      finished
+    ) {
+      return
+    }
 
-    setSelectedAnswer(id)
     stopSpeaking()
 
-    const isCorrect = id === question.correctWord.id
-    const newCorrectAnswers = correctAnswers + (isCorrect ? 1 : 0)
-
-    if (isCorrect) {
-      playSound('correct')
-      setCorrectAnswers(newCorrectAnswers)
-    } else {
+    // Wrong answer: mark the picture, the student can try another one.
+    if (id !== question.correctWord.id) {
       playSound('wrong')
+      setWrongAnswers([...wrongAnswers, id])
+      return
     }
+
+    answeredRef.current = true
+    setSelectedAnswer(id)
+    playSound('correct')
+
+    // As before, only an answer that is right on the first try counts as correct,
+    // so retrying cannot earn extra stars.
+    const newCorrectAnswers = correctAnswers + (wrongAnswers.length === 0 ? 1 : 0)
+    setCorrectAnswers(newCorrectAnswers)
 
     timerRef.current = setTimeout(() => {
       if (currentQuestion + 1 === questions.length) {
@@ -95,6 +112,8 @@ export default function ListenAndChoose({
       } else {
         setCurrentQuestion(currentQuestion + 1)
         setSelectedAnswer(null)
+        setWrongAnswers([])
+        answeredRef.current = false
       }
     }, 1000)
   }
@@ -119,17 +138,14 @@ export default function ListenAndChoose({
 
       <div className="listen-choose__options">
         {question.options.map((word) => {
-          const isSelected = selectedAnswer === word.id
-          const isCorrect = word.id === question.correctWord.id
+          const isWrong = wrongAnswers.includes(word.id)
 
           let stateClass = ''
 
-          if (selectedAnswer !== null) {
-            if (isSelected && isCorrect) {
-              stateClass = 'listen-choose__card--correct'
-            } else if (isSelected && !isCorrect) {
-              stateClass = 'listen-choose__card--wrong'
-            }
+          if (selectedAnswer === word.id) {
+            stateClass = 'listen-choose__card--correct'
+          } else if (isWrong) {
+            stateClass = 'listen-choose__card--wrong'
           }
 
           return (
@@ -138,13 +154,27 @@ export default function ListenAndChoose({
               key={word.id}
               className={`listen-choose__card ${stateClass}`}
               onClick={() => handleAnswer(word.id)}
-              disabled={selectedAnswer !== null}
+              disabled={selectedAnswer !== null || isWrong}
               aria-label={word.english}
             >
               <img src={word.image} alt={word.english} />
             </button>
           )
         })}
+      </div>
+
+      <div className="listen-choose__feedback-area" aria-live="polite">
+        {selectedAnswer !== null ? (
+          <p className="listen-choose__feedback listen-choose__feedback--correct">
+            Bravo! Pravilen odgovor!
+          </p>
+        ) : (
+          wrongAnswers.length > 0 && (
+            <p className="listen-choose__feedback listen-choose__feedback--wrong">
+              Poskusi znova!
+            </p>
+          )
+        )}
       </div>
     </section>
   )
