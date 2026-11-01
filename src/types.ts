@@ -47,6 +47,9 @@ export interface Sentence {
   topic: TopicId
   grade: Grade
   text: string
+  // Other grammatically correct orders of exactly the same words, also accepted
+  // as the answer (e.g. "cats and dogs" / "dogs and cats").
+  alternatives?: string[]
 }
 
 export interface Game {

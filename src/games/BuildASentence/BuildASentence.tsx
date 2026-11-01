@@ -1,6 +1,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { GameProps } from '../types'
+import type { Sentence } from '../../types'
 import { getSentences } from '../../data/sentences'
 import OllieMessage from '../../components/OllieMessage'
 import './BuildASentence.css'
@@ -25,6 +26,25 @@ function getWords(sentence: string): string[] {
   return sentence.replace(/[.!?]$/, '').split(/\s+/)
 }
 
+// Premešane ploščice z besedami ene povedi
+function createWordTiles(sentence: Sentence | undefined): WordTile[] {
+  if (!sentence) return []
+  return shuffleWords(getWords(sentence.text).map((text, id) => ({ id, text })))
+}
+
+// Velike/male črke se ne primerjajo: "Two plus one" sestavimo iz ploščic "two", "plus", "One"
+function toAnswerKey(words: string[]): string {
+  return words.join(' ').toLowerCase()
+}
+
+// Sprejme glavno poved in vse izrecno navedene pravilne vrstne rede (sentence.alternatives)
+function isAcceptedAnswer(sentence: Sentence, selected: string[]): boolean {
+  const answer = toAnswerKey(selected)
+  return [sentence.text, ...(sentence.alternatives ?? [])].some(
+    (accepted) => toAnswerKey(getWords(accepted)) === answer
+  )
+}
+
 // Predvajanje zvokov
 function playSound(name: string) {
   const audio = new Audio(`/sounds/${name}.wav`)
@@ -43,7 +63,10 @@ export default function BuildASentence({
   )
 
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [availableWords, setAvailableWords] = useState<WordTile[]>([])
+  // Besede prve povedi; za vsako naslednjo jih pripravi nextSentence()
+  const [availableWords, setAvailableWords] = useState<WordTile[]>(() =>
+    createWordTiles(sentences[0])
+  )
   const [selectedWords, setSelectedWords] = useState<WordTile[]>([])
   const [feedback, setFeedback] = useState<'correct' | 'wrong' | null>(null)
   const [correctCount, setCorrectCount] = useState(0)
@@ -57,27 +80,15 @@ export default function BuildASentence({
   const sentence = sentences[currentIndex]
   const total = sentences.length
 
+  // Ob zapustitvi igre ustavi časovnik za ponovni poskus
   useEffect(() => {
-    if (!sentence) return
-
-    const words = getWords(sentence.text).map((text, id) => ({
-      id,
-      text,
-    }))
-
-    setAvailableWords(shuffleWords(words))
-    setSelectedWords([])
-    setFeedback(null)
-    setHadMistake(false)
-    checking.current = false
-
     return () => {
       if (retryTimer.current !== null) {
         clearTimeout(retryTimer.current)
         retryTimer.current = null
       }
     }
-  }, [sentence])
+  }, [])
 
   useEffect(() => {
     onProgress({
@@ -125,10 +136,9 @@ export default function BuildASentence({
     }
     checking.current = true
 
-    const answer = selectedWords.map((word) => word.text).join(' ')
-    const expected = getWords(sentence.text).join(' ')
+    const answer = selectedWords.map((word) => word.text)
 
-    if (answer === expected) {
+    if (isAcceptedAnswer(sentence, answer)) {
       // Pravilen odgovor
       playSound('correct')
       setFeedback('correct')
@@ -166,6 +176,12 @@ export default function BuildASentence({
     } else {
       // Ne (prev) => prev + 1: dvojni klik na "Naprej" bi sicer preskočil poved
       setCurrentIndex(currentIndex + 1)
+      // Pripravi naslednjo poved (prej v useEffect – zdaj brez dodatnega izrisa)
+      setAvailableWords(createWordTiles(sentences[currentIndex + 1]))
+      setSelectedWords([])
+      setFeedback(null)
+      setHadMistake(false)
+      checking.current = false
     }
   }
 

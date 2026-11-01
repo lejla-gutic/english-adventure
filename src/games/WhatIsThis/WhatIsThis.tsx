@@ -5,6 +5,7 @@ import WordImage from '../../components/WordImage'
 import { getWords, getWordsWithImages } from '../../data/vocabulary'
 import { routeHref } from '../../router'
 import type { TopicId, VocabularyWord } from '../../types'
+import { playSound, prepareSounds } from '../../utils/sounds'
 import { speakWord, stopSpeaking } from '../../utils/speech'
 import type { GameProps } from '../types'
 import { createQuestions } from './questions'
@@ -50,16 +51,20 @@ export default function WhatIsThis({ topic, grade, onProgress, onFinish }: GameP
     ),
   )
   const [index, setIndex] = useState(0)
-  const [selected, setSelected] = useState<VocabularyWord | null>(null)
+  // True once the correct answer is chosen – only then can the child move on.
+  const [answered, setAnswered] = useState(false)
+  // Wrong answers already tried for the current question; the child can try again.
+  const [wrongAnswers, setWrongAnswers] = useState<string[]>([])
   const [correctCount, setCorrectCount] = useState(0)
 
   const nextButton = useRef<HTMLButtonElement>(null)
   const firstOption = useRef<HTMLButtonElement>(null)
+  // Increased on "Naprej" and when leaving the game, so the word queued after the
+  // "correct" sound is not spoken once it is no longer wanted.
+  const questionToken = useRef(0)
 
   const question = questions[index]
   const total = questions.length
-  const answered = selected !== null
-  const isCorrect = answered && selected.id === question.word.id
   const prompt = getPrompt(topic.id)
 
   useEffect(() => {
@@ -73,7 +78,13 @@ export default function WhatIsThis({ topic, grade, onProgress, onFinish }: GameP
   }, [answered, index])
 
   // Stop speaking when the child leaves the game.
-  useEffect(() => stopSpeaking, [])
+  useEffect(
+    () => () => {
+      questionToken.current += 1
+      stopSpeaking()
+    },
+    [],
+  )
 
   if (!question) {
     return (
@@ -88,26 +99,48 @@ export default function WhatIsThis({ topic, grade, onProgress, onFinish }: GameP
   }
 
   function handleAnswer(option: VocabularyWord) {
-    if (answered) return
-    setSelected(option)
-    if (option.id === question.word.id) setCorrectCount((count) => count + 1)
-    speakWord(question.word.english)
+    if (answered || wrongAnswers.includes(option.id)) return
+
+    // Inside the click: unlocks audio for Safari. Any word still being spoken
+    // (e.g. the title) is stopped, so it does not overlap with the sound.
+    prepareSounds(['correct', 'wrong'])
+    stopSpeaking()
+
+    // Wrong answer: mark it, the child can try another one (the answer is not revealed).
+    if (option.id !== question.word.id) {
+      playSound('wrong')
+      setWrongAnswers([...wrongAnswers, option.id])
+      return
+    }
+
+    setAnswered(true)
+    // Only an answer that is right on the first try counts, so retrying cannot earn extra stars.
+    if (wrongAnswers.length === 0) setCorrectCount((count) => count + 1)
+    // Pronounce the word after the sound has finished, so the two do not overlap.
+    const token = questionToken.current
+    const word = question.word.english
+    playSound('correct', () => {
+      if (token === questionToken.current) speakWord(word)
+    })
   }
 
   function handleNext() {
+    if (!answered) return
+    questionToken.current += 1
     stopSpeaking()
     if (index + 1 >= total) {
       onFinish({ correct: correctCount, total })
       return
     }
     setIndex(index + 1)
-    setSelected(null)
+    setAnswered(false)
+    setWrongAnswers([])
   }
 
   function optionState(option: VocabularyWord): 'correct' | 'wrong' | 'dimmed' | null {
+    if (wrongAnswers.includes(option.id)) return 'wrong'
     if (!answered) return null
     if (option.id === question.word.id) return 'correct'
-    if (option.id === selected.id) return 'wrong'
     return 'dimmed'
   }
 
@@ -132,7 +165,7 @@ export default function WhatIsThis({ topic, grade, onProgress, onFinish }: GameP
               type="button"
               className={`wit__option${state ? ` wit__option--${state}` : ''}`}
               onClick={() => handleAnswer(option)}
-              aria-disabled={answered}
+              aria-disabled={answered || state === 'wrong'}
             >
               {state === 'correct' && <CheckIcon />}
               {state === 'wrong' && <CrossIcon />}
@@ -146,17 +179,9 @@ export default function WhatIsThis({ topic, grade, onProgress, onFinish }: GameP
 
       <div className="wit__footer" aria-live="polite">
         {answered ? (
-          <div className={`wit__feedback wit__feedback--${isCorrect ? 'correct' : 'wrong'}`}>
-            <OllieMessage mood={isCorrect ? 'correct' : 'wrong'}>
-              {isCorrect ? (
-                <>
-                  <strong lang="en">{question.word.english}</strong> je pravilno.
-                </>
-              ) : (
-                <>
-                  Pravilni odgovor je <strong lang="en">{question.word.english}</strong>.
-                </>
-              )}
+          <div className="wit__feedback wit__feedback--correct">
+            <OllieMessage mood="correct">
+              <strong lang="en">{question.word.english}</strong> je pravilno.
             </OllieMessage>
             <div className="wit__feedback-actions">
               <SpeakerButton word={question.word.english} />
@@ -164,6 +189,13 @@ export default function WhatIsThis({ topic, grade, onProgress, onFinish }: GameP
                 Naprej
               </button>
             </div>
+          </div>
+        ) : wrongAnswers.length > 0 ? (
+          // A new key after each wrong try, so Ollie picks a new message
+          <div className="wit__feedback wit__feedback--wrong">
+            <OllieMessage key={wrongAnswers.length} mood="wrong">
+              Izberi drugo besedo.
+            </OllieMessage>
           </div>
         ) : (
           <p className="wit__hint">{prompt.hint}</p>

@@ -101,6 +101,45 @@
   box-shadow: none;
 }
 
+/* Small phones: narrower cards, so the text gets its own space to the right
+   of the connection circle instead of being centred underneath it */
+@media (max-width: 600px) {
+  .match-pairs__grid {
+    gap: 14px;
+  }
+
+  .match-pairs__column {
+    gap: 12px;
+  }
+
+  .match-pairs__card {
+    min-height: 88px;
+    padding: 10px 8px 10px 46px;
+    font-size: 19px;
+    line-height: 1.2;
+  }
+
+  .match-pairs__card > span:not(.match-pairs__circle) {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .match-pairs__card img {
+    width: 56px;
+    height: 56px;
+  }
+
+  .match-pairs__circle {
+    left: 8px;
+    width: 30px;
+    height: 30px;
+  }
+
+  .match-pairs__circle--matched {
+    font-size: 15px;
+  }
+}
+
 /* Fixed space for Ollie's message, so the page does not jump when it appears */
 .match-pairs__feedback-area {
   display: flex;

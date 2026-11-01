@@ -19,6 +19,21 @@ let englishVoice: SpeechSynthesisVoice | null | undefined
 // garbage-collect it mid-word and never fire its end event.
 let currentUtterance: SpeechSynthesisUtterance | null = null
 
+// Safari (and sometimes Chrome) silently drop an utterance passed to speak()
+// right after cancel(). When something was still being spoken, the new word is
+// started after this short pause instead.
+const RESTART_DELAY_MS = 120
+let pendingStart: { timer: ReturnType<typeof setTimeout>; finish: () => void } | null = null
+
+// A word waiting for its delayed start is dropped; its onEnd is still called.
+function clearPendingStart() {
+  if (!pendingStart) return
+  const { timer, finish } = pendingStart
+  pendingStart = null
+  clearTimeout(timer)
+  finish()
+}
+
 const normaliseLang = (lang: string) => lang.replace('_', '-').toLowerCase()
 
 // en-GB if available, otherwise any other English voice.
@@ -62,15 +77,22 @@ export function speakWord(word: string, options: SpeakOptions = {}): boolean {
   if (!isSpeechSupported() || text === '') return false
 
   const synth = window.speechSynthesis
-  synth.cancel()
+  clearPendingStart()
+  // Only cancel when needed: cancel() followed directly by speak() can lose the new word.
+  const busy = synth.speaking || synth.pending
+  if (busy) synth.cancel()
 
   const utterance = new SpeechSynthesisUtterance(text)
   const voice = getEnglishVoice()
   if (voice) utterance.voice = voice
-  utterance.lang = voice?.lang ?? PREFERRED_LANG
+  // Some browsers report voice languages as "en_GB"; utterances need "en-GB".
+  utterance.lang = voice ? voice.lang.replace('_', '-') : PREFERRED_LANG
   utterance.rate = options.rate ?? CHILD_RATE
 
+  let finished = false
   const finish = () => {
+    if (finished) return
+    finished = true
     if (currentUtterance === utterance) currentUtterance = null
     options.onEnd?.()
   }
@@ -79,12 +101,23 @@ export function speakWord(word: string, options: SpeakOptions = {}): boolean {
   utterance.onerror = finish
 
   currentUtterance = utterance
-  if (synth.paused) synth.resume() // Chrome sometimes gets stuck in a paused state
-  synth.speak(utterance)
+  const start = () => {
+    pendingStart = null
+    if (synth.paused) synth.resume() // Chrome sometimes gets stuck in a paused state
+    synth.speak(utterance)
+  }
+
+  if (busy) {
+    pendingStart = { timer: setTimeout(start, RESTART_DELAY_MS), finish }
+  } else {
+    start()
+  }
   return true
 }
 
 // Stops any word that is currently being spoken (e.g. when leaving a game).
 export function stopSpeaking(): void {
-  if (isSpeechSupported()) window.speechSynthesis.cancel()
+  if (!isSpeechSupported()) return
+  clearPendingStart()
+  window.speechSynthesis.cancel()
 }

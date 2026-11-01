@@ -4,6 +4,8 @@ import type { Grade, Sentence, TopicId } from '../types'
 // Each topic contains 6 sentences per grade.
 // Grade 2 uses simpler sentences, while grade 3 includes
 // longer sentences and more complex structures.
+// `alternatives` lists other correct orders of the same words (only these
+// orders are accepted – not every permutation is grammatical).
 export const SENTENCES: Sentence[] = [
   //Animals
   { topic: 'animals', grade: 2, text: 'A big dog.' },
@@ -12,12 +14,12 @@ export const SENTENCES: Sentence[] = [
   { topic: 'animals', grade: 2, text: 'The bird is blue.' },
   { topic: 'animals', grade: 2, text: 'I have a cow.' },
   { topic: 'animals', grade: 2, text: 'Where is my dog?' },
-  { topic: 'animals', grade: 3, text: 'Birds can sing and fly.' },
+  { topic: 'animals', grade: 3, text: 'Birds can sing and fly.', alternatives: ['Birds can fly and sing.'] },
   { topic: 'animals', grade: 3, text: 'Pigs are usually dirty.' },
   { topic: 'animals', grade: 3, text: 'My little dog likes to play.' },
   { topic: 'animals', grade: 3, text: 'Where is the little rabbit?' },
   { topic: 'animals', grade: 3, text: 'How many horses can you see?' },
-  { topic: 'animals', grade: 3, text: 'My favourite animals are cats and dogs.' },
+  { topic: 'animals', grade: 3, text: 'My favourite animals are cats and dogs.', alternatives: ['My favourite animals are dogs and cats.'] },
   //Colours
   { topic: 'colours', grade: 2, text: 'A red apple.' },
   { topic: 'colours', grade: 2, text: 'I like green.' },
@@ -28,7 +30,7 @@ export const SENTENCES: Sentence[] = [
   { topic: 'colours', grade: 3, text: 'The grass is always green.' },
   { topic: 'colours', grade: 3, text: 'Can you see the pink car?' },
   { topic: 'colours', grade: 3, text: 'There are colourful flowers in the garden.' },
-  { topic: 'colours', grade: 3, text: 'Brown and purple are my favourite colours.' },
+  { topic: 'colours', grade: 3, text: 'Brown and purple are my favourite colours.', alternatives: ['Purple and brown are my favourite colours.'] },
   { topic: 'colours', grade: 3, text: 'What is your favourite colour?' },
   { topic: 'colours', grade: 3, text: 'Our carpet is full of colours.' },
   //Food
@@ -37,8 +39,8 @@ export const SENTENCES: Sentence[] = [
   { topic: 'food', grade: 2, text: 'I eat an apple.' },
   { topic: 'food', grade: 2, text: 'Can I have some water?' },
   { topic: 'food', grade: 2, text: 'The egg is white.' },
-  { topic: 'food', grade: 2, text: 'I have bread and milk.' },
-  { topic: 'food', grade: 3, text: 'I like apples and bananas for breakfast.' },
+  { topic: 'food', grade: 2, text: 'I have bread and milk.', alternatives: ['I have milk and bread.'] },
+  { topic: 'food', grade: 3, text: 'I like apples and bananas for breakfast.', alternatives: ['I like bananas and apples for breakfast.'] },
   { topic: 'food', grade: 3, text: 'My favourite food is pizza.' },
   { topic: 'food', grade: 3, text: 'I usually drink orange juice.' },
   { topic: 'food', grade: 3, text: 'Would you like some cake?' },
@@ -66,7 +68,7 @@ export const SENTENCES: Sentence[] = [
   { topic: 'school', grade: 2, text: 'I have a rubber.' },
   { topic: 'school', grade: 3, text: 'Please put your scissors in the pencil case.' },
   { topic: 'school', grade: 3, text: 'Where are my scissors?' },
-  { topic: 'school', grade: 3, text: 'I need scissors and glue for school.' },
+  { topic: 'school', grade: 3, text: 'I need scissors and glue for school.', alternatives: ['I need glue and scissors for school.'] },
   { topic: 'school', grade: 3, text: 'My pencil case is full of crayons.' },
   { topic: 'school', grade: 3, text: 'Can I borrow your pen, please?' },
   { topic: 'school', grade: 3, text: 'I have a new pencil case.' },
@@ -74,7 +76,7 @@ export const SENTENCES: Sentence[] = [
   { topic: 'numbers', grade: 2, text: 'There are three cats.' },
   { topic: 'numbers', grade: 2, text: 'One is a number.' },
   { topic: 'numbers', grade: 2, text: 'I am six years old.' },
-  { topic: 'numbers', grade: 2, text: 'One plus two is three.' },
+  { topic: 'numbers', grade: 2, text: 'One plus two is three.', alternatives: ['Two plus one is three.'] },
   { topic: 'numbers', grade: 2, text: 'I have two dogs.' },
   { topic: 'numbers', grade: 2, text: 'Numbers are fun!' },
   { topic: 'numbers', grade: 3, text: 'There are eight children in the room.' },

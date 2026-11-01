@@ -6,17 +6,13 @@ import WordImage from '../../components/WordImage'
 import { getWords } from '../../data/vocabulary'
 import { routeHref } from '../../router'
 import { shuffle } from '../../utils/random'
+import { playSound, prepareSounds } from '../../utils/sounds'
 import { speakWord, stopSpeaking } from '../../utils/speech'
 import type { GameProps } from '../types'
 import { isCorrectAnswer, isRecognitionSupported, listenOnce, type RecognitionError } from './recognition'
 import './SayIt.css'
 
 const MAX_WORDS = 10
-
-function playSound(name: string) {
-  const audio = new Audio(`/sounds/${name}.wav`)
-  audio.play().catch(() => {})
-}
 
 type Status = 'idle' | 'listening' | 'correct' | 'wrong' | 'error'
 
@@ -40,6 +36,9 @@ export default function SayIt({ topic, grade, onProgress, onFinish }: GameProps)
 
   const cancelListening = useRef<(() => void) | null>(null)
   const nextButton = useRef<HTMLButtonElement>(null)
+  // Increased on every new attempt, next word and when leaving the game, so the
+  // pronunciation queued after the "wrong" sound is skipped if it is no longer wanted.
+  const attemptRef = useRef(0)
 
   const word = words[index]
   const total = words.length
@@ -57,6 +56,7 @@ export default function SayIt({ topic, grade, onProgress, onFinish }: GameProps)
   // Stop listening and speaking when the child leaves the game.
   useEffect(
     () => () => {
+      attemptRef.current += 1
       cancelListening.current?.()
       stopSpeaking()
     },
@@ -94,7 +94,11 @@ export default function SayIt({ topic, grade, onProgress, onFinish }: GameProps)
     // The ref is set immediately, so a fast double click cannot start two listeners
     // (which could both count the same word as correct).
     if (status === 'listening' || cancelListening.current) return
+    attemptRef.current += 1
+    const attempt = attemptRef.current
     stopSpeaking() // the microphone should not hear our own voice
+    // The result sound plays after recognition, outside this click – unlock audio now (Safari).
+    prepareSounds(['correct', 'wrong'])
     setStatus('listening')
     setHeard('')
     setError(null)
@@ -108,9 +112,11 @@ export default function SayIt({ topic, grade, onProgress, onFinish }: GameProps)
           setStatus('correct')
           setCorrectCount((count) => count + 1)
         } else {
-          playSound('wrong')
           setStatus('wrong')
-          speakWord(word.english) // let the child hear the right pronunciation
+          // Let the child hear the right pronunciation – after the sound, so they do not overlap.
+          playSound('wrong', () => {
+            if (attempt === attemptRef.current) speakWord(word.english)
+          })
         }
       },
       onError: (recognitionError) => {
@@ -123,6 +129,7 @@ export default function SayIt({ topic, grade, onProgress, onFinish }: GameProps)
 
   // Goes to the next word; a skipped word does not count as correct.
   function handleNext() {
+    attemptRef.current += 1
     cancelListening.current?.()
     cancelListening.current = null
     stopSpeaking()

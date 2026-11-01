@@ -19,13 +19,10 @@ function App() {
   const route = useRoute()
   const href = routeHref(route)
 
-  const [progress, setProgress] = useState(() => loadStarProgress(grade))
-
-useEffect(() => {
-  setProgress(loadStarProgress(grade))
-}, [grade, href])
-
-const stars = getTotalStars(progress)
+  // Read on every render: App re-renders only when the grade or the route changes,
+  // so the stars are always fresh (e.g. after returning from a game) without an extra render.
+  const progress = loadStarProgress(grade)
+  const stars = getTotalStars(progress)
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -33,7 +30,7 @@ const stars = getTotalStars(progress)
 
   // A locked topic (or one of its games) opened by typing the URL shows the map instead.
   if ((route.page === 'topic' || route.page === 'game') &&
-      !isTopicUnlocked(loadStarProgress(grade), route.topic.id)) {
+      !isTopicUnlocked(progress, route.topic.id)) {
     return <TopicsPage grade={grade} stars={stars} />
   }
 
