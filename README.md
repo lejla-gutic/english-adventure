@@ -19,19 +19,6 @@ Navodila v aplikaciji so v slovenščini, besede in povedi, ki se jih otrok uči
 - **Navigacija** – gumbi *Domov*, *Zemljevid*, *Igraj znova* in *Naslednja igra* na zaslonu z rezultatom.
 - **Prilagodljiv prikaz** – aplikacija deluje na računalniku, tablici in telefonu.
 
-## Učne teme
-
-| Tema | Slovensko | Število besed |
-|---|---|---|
-| Animals | Živali | 10 |
-| Colours | Barve | 10 |
-| Food | Hrana | 10 |
-| Family | Družina | 8 |
-| School | Šola | 10 |
-| Numbers | Števila | 10 |
-
-Nekatere besede so namenjene samo 3. razredu. Vsaka beseda ima svojo ilustracijo (SVG), ki je bila izdelana posebej za ta projekt (glej [`public/images/README.md`](public/images/README.md)).
-
 ## Mini-igre
 
 | Mini-igra | Opis |
