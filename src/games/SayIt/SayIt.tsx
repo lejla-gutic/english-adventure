@@ -13,6 +13,11 @@ import './SayIt.css'
 
 const MAX_WORDS = 10
 
+function playSound(name: string) {
+  const audio = new Audio(`/sounds/${name}.wav`)
+  audio.play().catch(() => {})
+}
+
 type Status = 'idle' | 'listening' | 'correct' | 'wrong' | 'error'
 
 // Friendly explanations (in Slovenian) for the things that can go wrong.
@@ -99,9 +104,11 @@ export default function SayIt({ topic, grade, onProgress, onFinish }: GameProps)
         cancelListening.current = null
         setHeard(transcripts[0] ?? '')
         if (isCorrectAnswer(word.english, transcripts)) {
+          playSound('correct')
           setStatus('correct')
           setCorrectCount((count) => count + 1)
         } else {
+          playSound('wrong')
           setStatus('wrong')
           speakWord(word.english) // let the child hear the right pronunciation
         }
@@ -120,6 +127,7 @@ export default function SayIt({ topic, grade, onProgress, onFinish }: GameProps)
     cancelListening.current = null
     stopSpeaking()
     if (index + 1 >= total) {
+      playSound('new_level')
       onFinish({ correct: correctCount, total })
       return
     }
@@ -136,7 +144,7 @@ export default function SayIt({ topic, grade, onProgress, onFinish }: GameProps)
     <section className="say">
       <div className="say__title">
         <h1>Say it!</h1>
-        <SpeakerButton word="Say it!" />
+        <SpeakerButton word="Say it!" disabled={status === 'listening'} />
       </div>
 
       <div className="say__card">
@@ -146,7 +154,7 @@ export default function SayIt({ topic, grade, onProgress, onFinish }: GameProps)
         <p className="say__word" lang="en">
           {word.english}
         </p>
-        <SpeakerButton word={word.english} label="Poslušaj" />
+        <SpeakerButton word={word.english} label="Poslušaj" disabled={status === 'listening'} />
       </div>
 
       <div className="say__mic">

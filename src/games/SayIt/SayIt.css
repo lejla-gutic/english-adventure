@@ -222,3 +222,8 @@
     outline: 0.5rem solid rgb(34 135 75 / 0.25);
   }
 }
+
+.say .speaker-btn:disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+}

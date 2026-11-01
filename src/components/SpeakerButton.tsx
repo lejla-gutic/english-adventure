@@ -6,10 +6,11 @@ interface SpeakerButtonProps {
   word: string // English word (or sentence) to pronounce
   label?: string // visible text, e.g. "Poslušaj" – without it the button is a round icon
   className?: string
+  disabled?: boolean
 }
 
 // Speaker button that pronounces a word; clicking again plays it again.
-export default function SpeakerButton({ word, label, className }: SpeakerButtonProps) {
+export default function SpeakerButton({ word, label, className, disabled = false }: SpeakerButtonProps) {
   const [speaking, setSpeaking] = useState(false)
   // A repeated click interrupts the previous word, whose end event arrives later –
   // only the most recent click may switch the "speaking" state off.
@@ -35,7 +36,7 @@ export default function SpeakerButton({ word, label, className }: SpeakerButtonP
       type="button"
       className={classes}
       onClick={handleClick}
-      disabled={!supported}
+      disabled={!supported || disabled}
       aria-label={label ? undefined : 'Poslušaj'}
       title={supported ? 'Poslušaj' : 'Tvoj brskalnik ne podpira izgovorjave.'}
     >
